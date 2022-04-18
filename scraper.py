@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[10]:
+# In[2]:
 
 
 import requests
@@ -10,7 +10,7 @@ from datetime import datetime, timezone
 import json
 
 
-# In[2]:
+# In[3]:
 
 
 """
@@ -32,8 +32,17 @@ state: state
 
 """
 
+# url = "https://jsonplaceholder.typicode.com/todos/1"
 
-# In[3]:
+url = "https://backend.dr-plano.com/courses_dates?id=114569964&start=1650265200000&end=1650319200000"
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36",
+    "accept": "application/json"
+}
+response = requests.get(url, headers=headers)
+
+
+# In[4]:
 
 
 def toIsoString(dateTime):
@@ -43,20 +52,12 @@ def getUtcIsoString():
     utcDt = datetime.now(timezone.utc).replace(microsecond=0)
     return toIsoString(utcDt)
 
-
-# In[4]:
-
-
 def unixTimestampToUTCIsoString(unixTimestamp):
     # cast to int (should be int already but just in case)
     # /1000 to get milliseconds from microseconds
     ts = int(unixTimestamp) / 1000
     dt = datetime.utcfromtimestamp(ts)
     return toIsoString(dt)
-
-
-# In[5]:
-
 
 def parse_payload(response_payload):
     data = []
@@ -72,19 +73,13 @@ def parse_payload(response_payload):
     return data
 
 
-# In[6]:
+# In[ ]:
 
 
-# url = "https://jsonplaceholder.typicode.com/todos/1"
-url = "https://backend.dr-plano.com/courses_dates?id=114569964&start=1650265200000&end=1650319200000"
-headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36",
-    "accept": "application/json"
-}
-response = requests.get(url, headers=headers)
 
 
-# In[16]:
+
+# In[5]:
 
 
 parsed_result = {
@@ -96,14 +91,13 @@ parsed_result = {
     "ctt": response.headers["Content-Type"],
     "d": parse_payload(response.json())
 }
+
+
+# In[6]:
+
+
 json_string = json.dumps(parsed_result)
 
 with open("stats/parsed.data", "a") as data_file:
     data_file.write(json_string + "\n")
-
-
-# In[ ]:
-
-
-
 
