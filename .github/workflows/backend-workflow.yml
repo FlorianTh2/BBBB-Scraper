@@ -4,8 +4,8 @@ on:
   workflow_dispatch:
   schedule:
     - cron: "* 5-23 * * *"
-  push:
-  pull_request:
+  # push:
+  # pull_request:
 
 jobs:
   build:
