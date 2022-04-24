@@ -1,16 +1,26 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[2]:
+# In[13]:
+
+
+# python -m pip install -r requirements.txt
+# to python-script:
+#  - via jupyterlab-gui
+#  - via jupyter nbconvert --to script [YOUR_NOTEBOOK].ipynb
+
+
+# In[12]:
 
 
 import requests
-import pandas as pd
 from datetime import datetime, timezone
 import json
 
 
-# In[3]:
+# ## Berta Block Boulderhalle Berlin Scraper
+
+# In[4]:
 
 
 """
@@ -32,25 +42,20 @@ state: state
 
 """
 
-# url = "https://jsonplaceholder.typicode.com/todos/1"
-
-url = "https://backend.dr-plano.com/courses_dates?id=114569964&start=1650265200000&end=1650319200000"
-headers = {
-    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36",
-    "accept": "application/json"
-}
-response = requests.get(url, headers=headers)
+pass
 
 
-# In[4]:
+# In[5]:
 
 
 def toIsoString(dateTime):
     return dateTime.isoformat()
 
+def getUtc():
+    return datetime.now(timezone.utc).replace(microsecond=0)
+
 def getUtcIsoString():
-    utcDt = datetime.now(timezone.utc).replace(microsecond=0)
-    return toIsoString(utcDt)
+    return toIsoString(getUtc())
 
 def unixTimestampToUTCIsoString(unixTimestamp):
     # cast to int (should be int already but just in case)
@@ -58,6 +63,12 @@ def unixTimestampToUTCIsoString(unixTimestamp):
     ts = int(unixTimestamp) / 1000
     dt = datetime.utcfromtimestamp(ts)
     return toIsoString(dt)
+
+def getUnixTimestamp(dt):
+    return int(dt.timestamp()) * 1000
+
+def getDatetimeTodayWithSpecificHour(hour):
+    return getUtc().replace(hour=hour, minute=0, second=0)
 
 def parse_payload(response_payload):
     data = []
@@ -73,13 +84,32 @@ def parse_payload(response_payload):
     return data
 
 
-# In[ ]:
+# In[6]:
 
 
+# url = "https://jsonplaceholder.typicode.com/todos/1"
+
+# start: e.g. 1650265200000
+# end: e.g. 1650319200000
+url = (
+        "https://backend.dr-plano.com/courses_dates?" +
+        "id=114569964" +
+        "&start=" + str(getUnixTimestamp(getDatetimeTodayWithSpecificHour(7))) +
+        "&end=" + str(getUnixTimestamp(getDatetimeTodayWithSpecificHour(22))))
+url
 
 
+# In[7]:
 
-# In[5]:
+
+headers = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36",
+    "accept": "application/json"
+}
+response = requests.get(url, headers=headers)
+
+
+# In[8]:
 
 
 parsed_result = {
@@ -93,10 +123,15 @@ parsed_result = {
 }
 
 
-# In[6]:
+# In[9]:
 
 
 json_string = json.dumps(parsed_result)
+json_string
+
+
+# In[10]:
+
 
 with open("stats/parsed.data", "a") as data_file:
     data_file.write(json_string + "\n")
