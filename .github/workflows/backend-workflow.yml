@@ -3,7 +3,7 @@ name: Collect Statistics
 on:
   workflow_dispatch:
   schedule:
-    - cron: "* 5-23 * * *"
+    - cron: "0 5-23 * * *"
   # push:
   # pull_request:
 
