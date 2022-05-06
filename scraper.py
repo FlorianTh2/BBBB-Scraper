@@ -148,7 +148,7 @@ def write_parsed_result_to_file(parsed_result):
     # if first data record is older than 1 year, delete this record
     # so the data does not grow indefinitly
     date_current = getUtc()
-    date_year_ago = date_current - timedelta(days=1*365/365)
+    date_year_ago = date_current - timedelta(days=1*365/1)
     with open(filename, 'r+') as f:
         line = f.readline() # read the first line and throw it out
         json_line = json.loads(line)
