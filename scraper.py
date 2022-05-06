@@ -1,26 +1,27 @@
 #!/usr/bin/env python
 # coding: utf-8
 
-# In[13]:
+# In[10]:
 
 
 # python -m pip install -r requirements.txt
 # to python-script:
 #  - via jupyterlab-gui
 #  - via jupyter nbconvert --to script [YOUR_NOTEBOOK].ipynb
+pass
 
 
-# In[12]:
+# In[11]:
 
 
 import requests
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 import json
 
 
 # ## Berta Block Boulderhalle Berlin Scraper
 
-# In[4]:
+# In[12]:
 
 
 """
@@ -45,7 +46,7 @@ state: state
 pass
 
 
-# In[5]:
+# In[13]:
 
 
 def toIsoString(dateTime):
@@ -84,7 +85,7 @@ def parse_payload(response_payload):
     return data
 
 
-# In[6]:
+# In[14]:
 
 
 # url = "https://jsonplaceholder.typicode.com/todos/1"
@@ -99,7 +100,7 @@ url = (
 url
 
 
-# In[7]:
+# In[15]:
 
 
 headers = {
@@ -109,7 +110,7 @@ headers = {
 response = requests.get(url, headers=headers)
 
 
-# In[8]:
+# In[16]:
 
 
 parsed_result = {
@@ -123,16 +124,48 @@ parsed_result = {
 }
 
 
-# In[9]:
+# In[19]:
 
 
-json_string = json.dumps(parsed_result)
-json_string
+# # get length of file
+# data = []
+# with open('stats/parsed.data') as f:
+#     for line in f:
+#         data.append(json.loads(line))
+# len(data)
 
 
-# In[10]:
+# In[18]:
 
 
-with open("stats/parsed.data", "a") as data_file:
-    data_file.write(json_string + "\n")
+def write_parsed_result_to_file(parsed_result):
+    filename = "stats/parsed.data"
+    json_string = json.dumps(parsed_result)
+    print(json_string)
+    with open(filename, "a") as f:
+        f.write(json_string + "\n")
+    
+    # if first data record is older than 1 year, delete this record
+    # so the data does not grow indefinitly
+    date_current = getUtc()
+    date_year_ago = date_current - timedelta(days=1*365/365)
+    with open(filename, 'r+') as f:
+        line = f.readline() # read the first line and throw it out
+        json_line = json.loads(line)
+        date_file_string = json_line["dat"]
+        date_file_datetime = datetime.fromisoformat(date_file_string)
+        if(date_file_datetime < date_year_ago):
+            data = f.read() # read the rest
+            f.seek(0) # set the cursor to the top of the file
+            f.write(data) # write the data back
+            f.truncate() # set the file size to the current size
+    return
+
+write_parsed_result_to_file(parsed_result)
+
+
+# In[ ]:
+
+
+
 
