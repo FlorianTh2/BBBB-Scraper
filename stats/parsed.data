@@ -278,3 +278,4 @@
 {"cod": 200, "ela": 795125, "url": "https://backend.dr-plano.com/courses_dates?id=114569964&start=1653030000000&end=1653084000000", "dat": "2022-05-20T23:06:51+00:00", "enc": "utf-8", "ctt": "application/json", "d": []}
 {"cod": 200, "ela": 505808, "url": "https://backend.dr-plano.com/courses_dates?id=114569964&start=1653116400000&end=1653170400000", "dat": "2022-05-21T05:07:22+00:00", "enc": "utf-8", "ctt": "application/json", "d": []}
 {"cod": 200, "ela": 694285, "url": "https://backend.dr-plano.com/courses_dates?id=114569964&start=1653116400000&end=1653170400000", "dat": "2022-05-21T06:09:22+00:00", "enc": "utf-8", "ctt": "application/json", "d": []}
+{"cod": 200, "ela": 496946, "url": "https://backend.dr-plano.com/courses_dates?id=114569964&start=1653116400000&end=1653170400000", "dat": "2022-05-21T07:06:29+00:00", "enc": "utf-8", "ctt": "application/json", "d": []}
